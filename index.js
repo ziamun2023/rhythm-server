@@ -92,7 +92,21 @@ async function run() {
         console.log(body)
     })
 
- 
+    app.patch('/studentProfile/admin/:id', async (req,res)=>{
+      const id=req.params.id;
+      const filteradmin={_id: new ObjectId(id)};
+      const updateDoc={
+        $set :{
+          role :'admin'
+        },
+
+      }
+      const result =await studentsCollection.updateOne(filteradmin,updateDoc)
+      res.send(result)
+    })
+
+    
+
 
 
 
