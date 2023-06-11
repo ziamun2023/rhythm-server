@@ -60,7 +60,7 @@ async function run() {
     const favouriteClass=db.collection("carts") //favourite class
 
     const studentsCollection=db.collection("allStudents") //all user
-    const classCollection=db.collection("classes") // all class
+    const classCollection=db.collection("allClass") // all class
 
 
     // app.post('/jwt', (req, res) => {
@@ -105,7 +105,99 @@ async function run() {
       res.send(result)
     })
 
-    
+    // make instructor
+
+    app.patch('/studentProfile/instructor/:id', async (req,res)=>{
+      const id=req.params.id;
+      const filterInstructor={_id: new ObjectId(id)};
+      const updateDoc={
+        $set :{
+          role :'instructor'
+        },
+
+      }
+      const result =await studentsCollection.updateOne(filterInstructor,updateDoc)
+      res.send(result)
+    })
+
+
+
+
+
+    app.get('/studentProfile/admin/:email', async(req,res)=>{
+      const email=req.params.email;
+       
+      const query={email:email}
+      const user =await studentsCollection.findOne(query)
+      const result={admin: user?.role ==='admin'}
+      res.send(result)
+    })
+
+
+    // app.get('/carts', verifyJWT, async (req, res) => {
+    //   const email = req.query.email;
+
+    //   if (!email) {
+    //     res.send([]);
+    //   }
+
+    //   const decodedEmail = req.decoded.email;
+    //   if (email !== decodedEmail) {
+    //     return res.status(403).send({ error: true, message: 'forbidden access' })
+    //   }
+
+    //   const query = { email: email };
+    //   const result = await favouriteClass.find(query).toArray();
+    //   res.send(result);
+    // });
+
+
+
+    app.get('/carts', async (req,res)=>{
+      const email=req.query.email;
+      if(!email){
+        res.send([])
+      }
+      const query ={email :email}
+      const result =await favouriteClass.find(query).toArray();
+      res.send(result)
+    })
+
+
+    app.delete('/carts/:id',async (req,res)=>{
+      const id=req.params.id
+      const query={_id: new ObjectId(id) }
+      const result =await favouriteClass.deleteOne(query);
+      res.send(result)
+    })
+
+
+    // user api
+
+    app.get('/studentProfile', async (req,res)=>{
+      const result = await studentsCollection.find().toArray()
+      res.send(result)
+    })
+
+ app.post('/studentProfile', async (req,res)=>{
+  const user=req.body;
+  console.log(user)
+  const query={email :user.email}
+  const ifexist=await studentsCollection.findOne(query)
+  console.log(ifexist)
+  if(ifexist){
+    return res.send({message: 'user already exist'})
+  }
+  const result=await studentsCollection.insertOne(user)
+  res.send(result)
+ })
+
+
+ app.get('/allclass', async (req, res) => {
+  const result = await classCollection.find().toArray();
+  res.send(result);
+})
+
 
 
 
