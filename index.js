@@ -79,7 +79,7 @@ async function run() {
       res.send(result);
     })
 
-    
+
     app.delete('/delete/:id', async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) }
@@ -99,6 +99,8 @@ async function run() {
         
         console.log(body)
     })
+
+
 
     app.patch('/studentProfile/admin/:id', async (req,res)=>{
       const id=req.params.id;
@@ -204,6 +206,19 @@ async function run() {
  app.get('/allclass', async (req, res) => {
   const result = await classCollection.find().toArray();
   res.send(result);
+})
+ app.get('/peopleliked', async (req, res) => {
+  const result = await favouriteClass.find().toArray();
+  res.send(result);
+})
+
+app.post("/postclass",async(req,res)=>{
+  const body=req.body
+  const result=await classCollection.insertOne(body)
+  res.send(result)
+
+  
+  console.log(body)
 })
 
 
