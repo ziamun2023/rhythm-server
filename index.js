@@ -115,6 +115,55 @@ async function run() {
       res.send(result)
     })
 
+
+    app.patch('/allclass/approve/:id', async (req,res)=>{
+      const id=req.params.id;
+      const filterApprove={_id: new ObjectId(id)};
+      const updateDoc={
+        $set :{
+          status :'approved'
+        },
+
+      }
+      const result =await classCollection.updateOne(filterApprove,updateDoc)
+      res.send(result)
+    })
+
+    
+    app.patch('/allclass/deny/:id', async (req,res)=>{
+      const id=req.params.id;
+      const filterDeny={_id: new ObjectId(id)};
+      const updateDoc={
+        $set :{
+          status :'denied!'
+        },
+
+      }
+      const result =await classCollection.updateOne(filterDeny
+,updateDoc)
+      res.send(result)
+    })
+
+
+
+
+    app.put("/updatedoc/:id", async (req, res) => {
+      const id = req.params.id;
+      const body = req.body;
+      console.log(body);
+      const filter = { _id: new ObjectId(id) };
+      const updateDoc = {
+        $set: {
+       
+          description: body.description,
+        },
+      };
+      const result = await classCollection.updateOne(filter, updateDoc);
+      res.send(result);
+    });
+
+  
+
     // make instructor
 
     app.patch('/studentProfile/instructor/:id', async (req,res)=>{
