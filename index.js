@@ -56,13 +56,13 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
     const db=client.db("musicClass");
     const favouriteClass=db.collection("carts") //favourite class
 
     const studentsCollection=db.collection("allStudents") //all user
     const classCollection=db.collection("allClass") // all class
-
+    const allinstructorsDb=db.collection("instructor")
 
     // app.post('/jwt', (req, res) => {
     //   const user = req.body;
@@ -249,6 +249,10 @@ async function run() {
 
     app.get('/studentProfile', async (req,res)=>{
       const result = await studentsCollection.find().toArray()
+      res.send(result)
+    })
+    app.get('/allinstructors', async (req,res)=>{
+      const result = await allinstructorsDb.find().toArray()
       res.send(result)
     })
 
